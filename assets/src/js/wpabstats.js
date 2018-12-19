@@ -23,5 +23,15 @@ jQuery(document).ready(function($) {
 
             modStatsHtml.wpAbStatsVisitorHtml( result );
         });
+
+        modStatsGet.wpAbStatsPostGet( function( result ){
+
+            modStatsHtml.wpAbStatsPostHtml( result );
+        });
+
+        modStatsGet.wpAbStatsBrowserCount( function( result ){
+
+            modStatsHtml.wpAbStatsVisitorCountHtml( result );
+        })
     }
 });

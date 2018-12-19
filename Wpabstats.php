@@ -34,16 +34,16 @@ register_deactivation_hook( __FILE__, [ 'Wpabstats', 'pluginDesactivation' ] );
 
 require_once( WPABSTATS__PLUGIN_DIR . 'class.wpabstats.php' );
 require_once( WPABSTATS__PLUGIN_DIR . 'class.wpabstatsAdmin.php' );
-
 require_once( WPABSTATS__PLUGIN_DIR . 'class.wpabstatsAjax.php' );
 require_once( WPABSTATS__PLUGIN_DIR . 'class.wpabstatsWidget.php' );
 require_once( WPABSTATS__PLUGIN_DIR . 'class.wpabstatsCollect.php' );
+require_once( WPABSTATS__PLUGIN_DIR . 'class.wpabstatsCtp.php' );
 
-add_action( 'init', [ 'Wpabstats', 'init' ] );
 add_action( 'init', [ 'wpabstatsAdmin', 'init' ] );
-
-add_action( 'init', [ 'wpabstatsAjax', 'init' ] );
+add_action( 'admin_init', [ 'wpabstatsAjax', 'init' ] );
 add_action( 'init', [ 'wpabstatsWidget', 'init' ] );
+add_action( 'admin_init', [ 'wpabstatsCtp', 'init' ] );
+add_action( 'init', [ 'Wpabstats', 'init' ] );
 add_action( 'init', [ 'wpabstatsCollect', 'init' ] );
 
 

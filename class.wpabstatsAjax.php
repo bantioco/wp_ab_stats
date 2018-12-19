@@ -24,6 +24,41 @@ class wpabstatsAjax
 
 		add_action( 'wp_ajax_wpAbStatsPageGet', [ 'wpabstatsAjax', 'wpAbStatsPageGet' ] );
 		add_action( 'wp_ajax_nopriv_wpAbStatsPageGet', [ 'wpabstatsAjax', 'wpAbStatsPageGet' ] );
+
+		add_action( 'wp_ajax_wpAbStatsPostGet', [ 'wpabstatsAjax', 'wpAbStatsPostGet' ] );
+		add_action( 'wp_ajax_nopriv_wpAbStatsPostGet', [ 'wpabstatsAjax', 'wpAbStatsPostGet' ] );
+
+		
+		add_action( 'wp_ajax_wpAbStatsBrowserCountGet', [ 'wpabstatsAjax', 'wpAbStatsBrowserCountGet' ] );
+		add_action( 'wp_ajax_nopriv_wpAbStatsBrowserCountGet', [ 'wpabstatsAjax', 'wpAbStatsBrowserCountGet' ] );
+	}
+
+	/**
+	 * @todo: a faire
+	 */
+	public function wpAbStatsBrowserCountGet()
+	{
+		global $wpdb;
+
+		$wpabdatas = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}abstats", OBJECT );
+
+		$data = [];
+
+		if( $wpabdatas )
+		{
+			foreach( $wpabdatas as $wpabdata )
+			{
+				if( !array_key_exists( $wpabdata->browser, $data ) )
+				{
+					$data[$wpabdata->browser] = 1;
+				}
+				else
+				{
+					$data[$wpabdata->browser] = $data[$wpabdata->browser] + 1;
+				}
+			}
+		}
+		wp_send_json( $data );
 	}
 
 
@@ -48,17 +83,14 @@ class wpabstatsAjax
 		global $wpdb;
 
 		$wpabTotals 	= $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}abstats", OBJECT );
-
-		$wpabdatas 	= $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}abstats ORDER BY id DESC LIMIT $offset,$limit;", OBJECT );
-		$data 		= [];
-
-		$total_items = count( $wpabTotals );
+		$wpabdatas 		= $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}abstats ORDER BY id DESC LIMIT $offset,$limit;", OBJECT );
+		$data 			= [];
+		$total_items 	= count( $wpabTotals );
 
 		$data['total_items'] 	= $total_items;
 		$data['page'] 			= $page;
 		$data['offset'] 		= $offset;
 		$data['limit'] 			= $limit;
-
 		$data['pagination']		= round( $total_items / ($limit-$offset)+1 );
 		
 		if( $wpabdatas )
@@ -82,12 +114,12 @@ class wpabstatsAjax
 					'continent' => $wpabdata->continent,
 					'continent_code' => $wpabdata->continent_code,
 					'browser' => $wpabdata->browser,
+					'os' => $wpabdata->os,
 					'date_log' => $dateLog,
 					'created_at' => $wpabdata->created_at
 				];
 			}
 		}
-
 		wp_send_json( $data );
     }
 
@@ -105,7 +137,6 @@ class wpabstatsAjax
 
 		$data 	= [];
 		
-
 		if( $posts )
 		{
 			$number = 0;
@@ -127,7 +158,44 @@ class wpabstatsAjax
 
 			}
 		}
+		wp_send_json( $data );
+	}
+	
 
+	public function wpAbStatsPostGet() 
+	{
+		$args = [
+			'posts_per_page' => -1,
+			'post_status' => 'publish',
+			'post_type' => 'post'
+		];
+
+		$posts = get_posts( $args );
+
+		global $wpdb;
+
+		$data 	= [];
+		
+		if( $posts )
+		{
+			$number = 0;
+
+			foreach( $posts as $key => $post )
+			{
+				$wpabdatas = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}abstats WHERE post_id=$post->ID", OBJECT );
+
+				$number = count( $wpabdatas );
+
+				$color = self::randomColor();
+
+				$data['labels'][$key] 			= $post->post_title;
+				$data['data'][$key] 			= $number;
+				$data['backgroundColor'][$key] 	= $color;
+				$data['borderColor'][$key] 		= $color;
+
+				$number = 0;
+			}
+		}
 		wp_send_json( $data );
     }
     

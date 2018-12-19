@@ -2,15 +2,19 @@ let modChart = {
 
     //Chart: require('chart.js'),
 
-    ChartBar: ( labels, data, backgroundColor, borderColor )=> {
+    ChartBar: ( labels, data, backgroundColor, borderColor, elementId, chartTitle="Post stats" )=> {
 
-        let ctx             = document.getElementById("wpAbStatsChartPage");
+        let ctx             = document.getElementById( elementId );
+
+        Chart.defaults.global.defaultFontFamily = 'Dosis';
+        Chart.defaults.global.defaultFontSize = 11;
+
         let wpabStatsChart  = new Chart(ctx, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: '# nombre de vue',
+                    label: 'Nombre de vue',
                     data: data,
                     backgroundColor: backgroundColor,
                     borderColor: borderColor,
@@ -28,7 +32,22 @@ let modChart = {
                 },
                 title: {
                     display: true,
-                    text: 'Page Stats'
+                    text: chartTitle,
+                    fontSize: 13
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
+                },
+                legend: {
+                    display: false,
+                    labels: {
+                        fontColor: 'black'
+                    }
                 }
             }
         });

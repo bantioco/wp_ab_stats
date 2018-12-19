@@ -14,6 +14,34 @@ let modStatsGet = {
         );
     },
 
+    wpAbStatsBrowserCount: ( callback )=> {
+
+        jQuery.post(
+            ajaxurl,
+            {
+                'action': 'wpAbStatsBrowserCountGet'
+            },
+            function( result ){
+
+                return callback( result );
+            }
+        );
+    },
+
+    wpAbStatsPostGet: ( callback )=> {
+
+        jQuery.post(
+            ajaxurl,
+            {
+                'action': 'wpAbStatsPostGet'
+            },
+            function( result ){
+
+                return callback( result );
+            }
+        );
+    },
+
     wpAbStatsVisitorGet: ( page=1, offset=1, limit=20, callback )=> {
 
         jQuery.post(

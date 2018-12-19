@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+@import url('https://fonts.googleapis.com/css?family=Dosis:300,400,700');
+
+@import url('_checkbox_custom.scss');
 
 .welcome-panel {
     position: relative;
@@ -6,11 +9,10 @@
     margin: 16px 0;
     padding: 10px 0;
     border: 1px solid #e5e5e5;
-    /*box-shadow: 0 1px 1px rgba(0,0,0,.04);*/
     background: #fff;
     font-size: 13px;
     line-height: 2.1em;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Dosis', 'Roboto', sans-serif;
 
     -moz-box-shadow: 0px 0px 5px 0px #656565;
     -webkit-box-shadow: 0px 0px 5px 0px #656565;
@@ -27,29 +29,158 @@
     padding:0;
 }
 
+.wpabstats_charts_widget{
+    position: relative;
+}
 
 .wpabstats_flex_container{
     position: relative;
-    overflow: hidden;
     width: 49%;
     margin:5px;
     height: auto;
-    font-family: 'Roboto', sans-serif;
-
-    max-height: 300px;
-
+    font-family: 'Dosis', 'Roboto', sans-serif;
+    min-height: 368px;
     border: 1px solid #BABABA;
 }
 
+.wpabstats_browser_container{
+
+    .browser_flex_items{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .browser_flex_item{
+            width: 28%;
+
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 2px;
+            padding: 10px;
+
+            //border: 1px solid #BABABA;
+        }
+    }
+}
+
+.wpabstats_widget_title{
+    padding: 10px;
+    font-size: 22px;
+    text-align: center;
+}
+
+
+.wpabstats_checkbox_container{
+
+    position: relative;
+    width: 49%;
+    margin:5px;
+    height: auto;
+    font-family: 'Dosis', 'Roboto', sans-serif;
+    max-height: 370px;
+}
+
+
+
+.wpabstats_active_widget{
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 3px;
+    z-index: 10;
+    opacity: 0.5;
+}
+
+
+
+/**
+ * 
+ */
+
+#wpabstats_visitor_dashboard_widget,
+#wpabstats_page_dashboard_widget{
+    .inside{
+        padding: 0 0 0 0;
+        min-height: 360px;
+        max-height: 360px;
+    }
+}
+
+.wpabstats_widget_container{
+    position: relative;
+    margin:0;
+    height: auto;
+    font-family: 'Dosis', 'Roboto', sans-serif;
+    max-height: 300px;
+}
+
+.wpabstats_visitor_item_description{
+    position: absolute;
+    overflow: hidden;
+    top: -10px;
+    width: 50%;
+    min-height: 100px;
+    left: calc(-50% - 5px);
+    z-index: 90;
+    background-color: #FFF;
+    display: none;
+    opacity: 0.9;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #BABABA;
+
+    .in_item_flag{
+        position: absolute;
+        top: 10px;
+        right:10px;
+    }
+
+    .in_item_description{
+        padding: 20px;
+    }
+}
+
+.wpabstats_visitor_paginate{
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding:0 0 0 0;
+    margin: 0 0 0 0;
+    font-size: 12px;
+    background-color: #BABABA;
+    color: #FFF;
+
+    li.wpabstats_paginate_item{
+        padding: 0 5px;
+        margin:0;
+        text-align: center;
+
+        .paginate_link{
+            text-decoration: none;
+            color: inherit;
+            font-size: 11px;
+        }
+
+        .paginate_active{
+            color: #202629;
+        }
+    }
+}
+
+
 .wpabstats_visitor_container{
     position: relative;
+    overflow: visible;
     display: block;
     list-style: none;
     padding:0 0 0 0;
     margin: 0 0 0 0;
-    overflow-y: auto;
-    overflow-x: none;
-    max-height: 274px;
+    overflow: auto;
+    max-height: 342px;
 
     .wpabstats_visitor_items{
         display: flex;
@@ -109,45 +240,14 @@
             //width: 20%;
             //border: 1px dotted grey;
             display: none;
-
         }
     }
 }
 
-.wpabstats_visitor_paginate{
 
-    position: relative;
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    padding:0 0 0 0;
-    margin: 0 0 0 0;
-    font-size: 12px;
-    background-color: #BABABA;
-    color: #FFF;
 
-    li.wpabstats_paginate_item{
-        padding: 0 5px;
-        margin:0;
-        text-align: center;
 
-        .paginate_link{
-            text-decoration: none;
-            color: inherit;
-            font-size: 11px;
-        }
 
-        .paginate_active{
-            color: #202629;
-        }
-    }
-}
 
-.wpabstats_active_widget{
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 3px;
-    z-index: 10;
-    opacity: 0.5;
-}
+
+

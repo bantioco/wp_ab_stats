@@ -68,6 +68,7 @@ class Wpabstats
 			continent varchar(255) NULL,
 			continent_code varchar(255) NULL,
 			browser varchar(255) NULL,
+			os varchar(255) NULL,
 			date_log varchar(255) NULL,
 			created_at varchar(255) NULL,
 			UNIQUE KEY id (id)

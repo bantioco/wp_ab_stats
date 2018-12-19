@@ -11,6 +11,7 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         filename: 'wpabstats.pack.js'
     },
+    devtool: "cheap-module-eval-source-map ",
     module: {
         rules: [
             {

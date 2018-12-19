@@ -23,6 +23,9 @@ class wpabstatsCollect
         add_action( 'template_redirect', [ 'wpabstatsCollect', 'wpAbStatsCurrentGet' ] );
     }
 
+    /**
+     * Get current post on front office, visitor view
+     */
     public static function wpAbStatsCurrentGet()
 	{
         global $wp_query;
@@ -36,13 +39,16 @@ class wpabstatsCollect
 		return;
 	}
 
-
+    /**
+     * Add data visitor and post view, in database
+     */
 	public static function wpAbStatsAddPostMeta( $post )
 	{
-        $now 	    = new Datetime();
-        $dateNow = $now->format('Y-m-d H:i:s');
-        $visitor    = self::ipInfo();
-        $browser    = self::getBrowser();
+        $now 	        = new Datetime();
+        $dateNow        = $now->format('Y-m-d H:i:s');
+        $visitor        = self::ipInfo();
+        $browser        = self::getBrowser();
+        $os_platform    = self::getOS();
 
         if( $visitor )
         {
@@ -58,6 +64,7 @@ class wpabstatsCollect
                 'continent' => $visitor['continent'], 
                 'continent_code' => $visitor['continent_code'], 
                 'browser' => $browser,
+                'os' => $os_platform,
                 'date_log' => $dateNow, 
                 'created_at' => $dateNow
             ];
@@ -78,6 +85,7 @@ class wpabstatsCollect
                     '%s',
                     '%s',
                     '%s',
+                    '%s',
                     '%s'
                 ]
             );
@@ -85,70 +93,107 @@ class wpabstatsCollect
 		return;
     }
 
-    public static function getBrowser()
-    {
-        $agent = $_SERVER['HTTP_USER_AGENT'];
-        $name = 'NA';
-        
-        if (preg_match('/MSIE/i', $agent) && !preg_match('/Opera/i', $agent)) {
-            $name = 'internet_explorer';
-        } elseif (preg_match('/Firefox/i', $agent)) {
-            $name = 'firefox';
-        } elseif (preg_match('/Chrome/i', $agent)) {
-            $name = 'chrome';
-        } elseif (preg_match('/Safari/i', $agent)) {
-            $name = 'safari';
-        } elseif (preg_match('/Opera/i', $agent)) {
-            $name = 'opera';
-        } elseif (preg_match('/Netscape/i', $agent)) {
-            $name = 'netscape';
+    /**
+     * Get visitor os
+     */
+    public static function getOS() 
+    { 
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+        $os_platform  = "Unknown OS Platform";
+
+        $os_array     = [
+            '/windows nt 10/i'      =>  'windows-10',
+            '/windows nt 6.3/i'     =>  'windows-8',
+            '/windows nt 6.2/i'     =>  'windows-8',
+            '/windows nt 6.1/i'     =>  'windows-7',
+            '/windows nt 6.0/i'     =>  'windows-vista',
+            '/windows nt 5.2/i'     =>  'windows-server',
+            '/windows nt 5.1/i'     =>  'windows-xp',
+            '/windows xp/i'         =>  'windows-xp',
+            '/windows nt 5.0/i'     =>  'windows-2000',
+            '/windows me/i'         =>  'windows-me',
+            '/win98/i'              =>  'windows-98',
+            '/win95/i'              =>  'windows-95',
+            '/win16/i'              =>  'windows-3.11',
+            '/macintosh|mac os x/i' =>  'mac-osx',
+            '/mac_powerpc/i'        =>  'mac-os9',
+            '/linux/i'              =>  'linux',
+            '/ubuntu/i'             =>  'ubuntu',
+            '/iphone/i'             =>  'iphone',
+            '/ipod/i'               =>  'ipod',
+            '/ipad/i'               =>  'ipad',
+            '/android/i'            =>  'android',
+            '/blackberry/i'         =>  'blackberry',
+            '/webos/i'              =>  'mobile'
+        ];
+
+        foreach ($os_array as $regex => $value)
+        {
+            if ( preg_match( $regex, strtolower( $user_agent ) ) ) $os_platform = $value;
         }
-        return $name;
-    }
-    
-    /*
-
-	public function wpAbStatsAddPostMetaDate( $post )
-	{
-
-		$now 		= new Datetime();
-		$dateView 	= $now->format('Y-m-d H:i:s');
-
-        add_post_meta( $post->ID, '_wpabstats_post_view_date', $dateView );
-        
-        self::wpAbStatsAddVisitorData( $post );
-
-		return;
+        return $os_platform;
     }
 
-    */
-    
-    /*
-    public function wpAbStatsAddVisitorData( $post )
-	{
-
-        $visitorData = self::ipInfo();
-
-        if( $visitorData )
-        { 
-    
-            add_post_meta( $post->ID, '_wpabstats_visitor_city', $visitorData['city'] );
-            add_post_meta( $post->ID, '_wpabstats_visitor_state', $visitorData['state'] );
-            add_post_meta( $post->ID, '_wpabstats_visitor_country', $visitorData['country'] );
-            add_post_meta( $post->ID, '_wpabstats_visitor_continent', $visitorData['continent'] );
-            add_post_meta( $post->ID, '_wpabstats_visitor_code', $visitorData['code'] );   
-        
-        }
-        
-
-
-		return;
-    }
-    */
-
-    public static function ipInfo($ip = NULL, $purpose = "location", $deep_detect = TRUE) 
+    /**
+     * Get visitor browser
+     */
+    public static function getBrowser() 
     {
-        $output = NULL;
+        $user_agent     = $_SERVER['HTTP_USER_AGENT'];
+        $browser        = "Unknown Browser";
+    
+        $browser_array = [
+            '/msie/i'      => 'internet_explorer',
+            '/firefox/i'   => 'firefox',
+            '/safari/i'    => 'safari',
+            '/chrome/i'    => 'chrome',
+            '/edge/i'      => 'edge',
+            '/opera/i'     => 'opera',
+            '/netscape/i'  => 'netscape',
+            '/maxthon/i'   => 'maxthon',
+            '/konqueror/i' => 'jonqueror',
+            '/mobile/i'    => 'handheld_browser'
+        ];
+    
+        foreach ($browser_array as $regex => $value)
+        {
+            if ( preg_match( $regex, strtolower( $user_agent ) ) ) $browser = $value;
+        }
+    
+        return $browser;
+    }
+
+    /**
+     * Random country IP for local devlopment test
+     */
+    public static function ipRand()
+    {
+        $ips = [ 
+            "90.37.38.76", 
+            "168.169.146.12", 
+            "31.22.48.0",
+            "41.220.144.0",
+            "24.51.64.0",
+            "5.23.128.0",
+            "64.37.32.0",
+            "23.16.0.0",
+            "2.104.0.0",
+            "2.160.0.0"
+        ];
+
+        return $ips[array_rand($ips)];
+    }
+
+    
+
+    /**
+     * Get all info visitor, with this IP
+     */
+    public static function ipInfo( $ip = NULL, $purpose = "location", $deep_detect = TRUE ) 
+    {
+        $output = null;
+
         if (filter_var($ip, FILTER_VALIDATE_IP) === FALSE) 
         {
             $ip = $_SERVER["REMOTE_ADDR"];
@@ -162,9 +207,13 @@ class wpabstatsCollect
             }
         }
 
-        //DEV
-        //$ip = "90.37.38.76";
-        $ip = "168.169.146.12";
+        /**
+         * For local devlopment test
+         */
+        if ( home_url() === "http://wordpress5.dom" )
+        {
+            $ip = self::ipRand();
+        }
 
         $purpose    = str_replace(array("name", "\n", "\t", " ", "-", "_"), NULL, strtolower(trim($purpose)));
         $support    = [ "country", "countrycode", "state", "region", "city", "location", "address" ];
@@ -227,6 +276,4 @@ class wpabstatsCollect
 
         return $output;
     }
-
-
 }
